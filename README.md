@@ -227,3 +227,109 @@ This project was developed with meaningful commits aligned to the lab manual req
 **Experiment:** 4  
 **Title:** Building a Small Interactive Web Application with State Handling and Version Control  
 **Aim:** To develop a small interactive web application that manages its own state, while practising version control using Git and GitHub.
+
+---
+
+## Experiment 6
+
+**Developing and Consuming Backend Services Using RESTful API Principles (Node.js and Express)**
+
+**Aim:** To develop and consume backend services that follow RESTful API principles, supporting basic CRUD operations with middleware handling using Node.js and Express.
+
+### Technology
+- **Node.js** — JavaScript runtime
+- **Express.js** — Web framework
+- **CORS** — Cross-origin support
+- **Nodemon** — Dev auto-restart
+
+### API Architecture
+
+```
+Postman / Frontend → HTTP Request → Express Server
+  → cors() → express.json() → logger()
+  → Routes → Controller → In-Memory Data
+  → JSON Response
+```
+
+### REST Resource: `/api/students`
+
+| Operation | HTTP Method | Endpoint | Status Code |
+|-----------|-------------|----------|-------------|
+| Create | `POST` | `/api/students` | 201 |
+| Read All | `GET` | `/api/students` | 200 |
+| Read One | `GET` | `/api/students/:id` | 200 |
+| Update | `PUT` | `/api/students/:id` | 200 |
+| Delete | `DELETE` | `/api/students/:id` | 200 |
+
+### Student Schema
+
+```json
+{
+  "id": "STU001",
+  "name": "Abhishek Patil",
+  "email": "abhishek@campusconnect.edu",
+  "department": "Computer Science",
+  "year": 2,
+  "skills": ["JavaScript", "React", "Node.js"]
+}
+```
+
+### Middleware Stack
+
+| Middleware | File | Purpose |
+|-----------|------|---------|
+| `cors()` | built-in | Allow cross-origin requests |
+| `express.json()` | built-in | Parse JSON request bodies |
+| `logger` | `middleware/logger.js` | Log all requests with timestamp |
+| `notFound` | `middleware/notFound.js` | 404 for unmatched routes |
+| `errorHandler` | `middleware/errorHandler.js` | Central JSON error responses |
+
+### HTTP Status Codes
+
+| Code | Meaning |
+|------|---------|
+| 200 | OK — GET / PUT / DELETE success |
+| 201 | Created — POST success |
+| 400 | Bad Request — validation error |
+| 404 | Not Found — student or route missing |
+| 500 | Internal Server Error |
+
+### Running the Backend
+
+```bash
+cd server
+npm install
+npm run dev
+# API running at http://localhost:5000
+```
+
+### Postman Testing
+
+Import: `docs/Campus-Connect-Experiment-6.postman_collection.json`
+
+Base URL: `http://localhost:5000`
+
+### Server File Structure
+
+```
+server/
+├── server.js
+├── routes/studentRoutes.js
+├── controllers/studentController.js
+├── middleware/
+│   ├── logger.js
+│   ├── errorHandler.js
+│   └── notFound.js
+└── data/students.js
+```
+
+### Documentation
+
+- Full API docs: [`docs/EXPERIMENT_6.md`](docs/EXPERIMENT_6.md)
+- Postman collection: [`docs/Campus-Connect-Experiment-6.postman_collection.json`](docs/Campus-Connect-Experiment-6.postman_collection.json)
+
+---
+
+## GitHub Repository
+
+🔗 **https://github.com/PatilAbhishek7/campus-connect-portal**
