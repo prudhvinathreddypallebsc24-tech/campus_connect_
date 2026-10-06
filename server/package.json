@@ -1,23 +1,18 @@
 {
-  "name": "campus-connect-server",
+  "name": "pgdesk-server",
   "version": "1.0.0",
-  "description": "Campus Connect REST API — CS3301 Experiment 6",
+  "description": "PG Desk REST API - CS3301 CIE-2",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js"
   },
-  "keywords": ["rest", "api", "express", "nodejs", "campus-connect"],
-  "author": "Abhishek Patil",
-  "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.9.2"
+    "express": "^4.22.3",
+    "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

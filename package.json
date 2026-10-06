@@ -1,0 +1,15 @@
+{
+  "name": "pgdesk",
+  "version": "1.0.0",
+  "description": "PG Desk – CS3301 CIE-2 Full Stack Project",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "start": "npm run dev",
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client",
+    "smoke": "node server/scripts/smoke-test.js"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}
