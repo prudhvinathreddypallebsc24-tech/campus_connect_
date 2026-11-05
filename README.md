@@ -1,335 +1,271 @@
-# Campus Connect
+# Campus Connect Portal 🎓
 
-A prototype Campus Connect authentication application built for **CS3301 Full Stack Development — Experiment 4**.
-
-> **Note:** This is a laboratory prototype demonstrating application state, UI interaction, and version control. It is not a production-grade authentication system.
-
----
-
-## Experiment 4
-
-**Building a Small Interactive Web Application with State Handling and Version Control**
-
-**Aim:** To develop a small interactive web application that manages its own state, while practising version control using Git and GitHub.
+> **A Centralized University Digital Operations & Academic Management SaaS Platform**  
+> Connecting Students, Instructional Faculty, and University Administrators through a unified, responsive interface.
 
 ---
 
-## Features
-
-| Feature | Description |
-|---------|-------------|
-| **Sign In** | Email + password login with validation |
-| **Registration** | Full name, email, password, confirm password with inline validation |
-| **Form Validation** | Required fields, email format, password length, password match |
-| **Login/Register switching** | Instant UI change via application state — no page reload |
-| **Prototype authentication** | Credential comparison driven entirely by React state |
-| **localStorage persistence** | Registered user persists across browser refreshes |
-| **Dashboard** | Personalised welcome, quick access grid, account info |
-| **Logout** | Clears session state — returns to Sign In without reload |
-| **Responsive UI** | Works on desktop, tablet, and mobile |
-| **Accessible UI** | Proper labels, ARIA roles, focus management, keyboard support |
-
----
-
-## State Management
-
-This application clearly demonstrates how **state drives the user interface** — the core concept of Experiment 4.
-
-### State Variables
-
-| Variable | Type | Purpose |
-|----------|------|---------|
-| `authMode` | `'login' \| 'register'` | Controls which form is rendered |
-| `registeredUser` | `{ name, email, password } \| null` | Stores the prototype account |
-| `currentUser` | `{ name, email } \| null` | The authenticated user's info |
-| `isAuthenticated` | `boolean` | Switches between Dashboard and Auth screen |
-| `errorMessage` | `string` | Validation / auth errors shown in the UI |
-| `successMessage` | `string` | Post-registration success message |
-
-### State Flow
-
-```
-User Action (click / type / submit)
-         ↓
-  Event Handler fires
-  (handleLogin / handleRegister / handleLogout / setAuthMode)
-         ↓
-  State Update
-  (setState / setIsAuthenticated / setAuthMode / …)
-         ↓
-  React Re-render
-  (component function re-executes with new state values)
-         ↓
-  Updated UI
-  (new screen, form, or message appears — no page reload)
-```
-
-### Concrete State Flow Examples
-
-**Switching from Login → Register:**
-```
-Click "Create Account"
-  → handleSwitchToRegister()
-    → setAuthMode('register')
-      → React re-renders
-        → RegisterForm renders instead of LoginForm
-```
-
-**Successful Registration:**
-```
-Submit valid registration form
-  → handleRegister(name, email, password)
-    → setRegisteredUser({ name, email, password })  ← stored in state + localStorage
-    → setAuthMode('login')
-    → setSuccessMessage("Registration successful!")
-      → React re-renders
-        → LoginForm renders with success message visible
-```
-
-**Successful Login:**
-```
-Submit valid credentials
-  → handleLogin(email, password)
-    → credentials match registeredUser in state
-    → setCurrentUser({ name, email })
-    → setIsAuthenticated(true)
-      → React re-renders
-        → Dashboard renders instead of AuthLayout
-```
-
-**Logout:**
-```
-Click "Logout"
-  → handleLogout()
-    → setIsAuthenticated(false)
-    → setCurrentUser(null)
-    → localStorage.removeItem(...)
-      → React re-renders
-        → AuthLayout + LoginForm renders
-        → Dashboard unmounts
-        (all without a full page reload)
-```
+## 📋 Table of Contents
+1. [Project Overview](#-project-overview)
+2. [Problem Statement](#-problem-statement)
+3. [Project Objectives](#-project-objectives)
+4. [User Roles & Key Capabilities](#-user-roles--key-capabilities)
+5. [Feature Matrix](#-feature-matrix)
+6. [Technology Stack](#-technology-stack)
+7. [System Architecture](#-system-architecture)
+8. [Folder Structure](#-folder-structure)
+9. [Installation & Setup](#-installation--setup)
+10. [Demonstration Credentials](#-demonstration-credentials)
+11. [Data Persistence & Prototype Architecture](#-data-persistence--prototype-architecture)
+12. [Current Limitations](#-current-limitations)
+13. [Future Roadmap](#-future-roadmap)
 
 ---
 
-## Technology Stack
+## 🏛️ Project Overview
 
-| Technology | Purpose |
-|------------|---------|
-| **React 19** | Component-based UI, state management with `useState` |
-| **Vite 8** | Development server, hot module replacement, build tool |
-| **JavaScript (ES2022)** | Application logic |
-| **CSS3** | Responsive design with custom properties, flexbox, grid |
-| **localStorage** | Prototype persistence between page refreshes |
-| **Git** | Version control throughout development |
-| **GitHub** | Remote repository hosting |
+**Campus Connect Portal** is an enterprise-grade digital campus management web application designed for higher education institutions. The portal unifies academic life, campus announcements, event registries, coursework submissions, grading workflows, and administrative directory services into a seamless, role-governed experience.
+
+Built with **React 18**, **Vite**, and **React Router DOM**, the platform features a responsive SaaS aesthetic adhering to modern institutional design systems—featuring deep navy blues, crisp slate neutrals, and emerald green accents.
 
 ---
 
-## Project Structure
+## ⚠️ Problem Statement
+
+Modern university campuses often struggle with fragmented communication channels:
+- Announcements posted across disjointed bulletin boards, disparate email listservs, and social apps.
+- Disconnected event registrations leading to attendance mismanagement and overbooking.
+- Inconsistent assignment distribution and grading feedback loops between faculty and students.
+- Lack of centralized directories for administrative oversight and auditability.
+
+Students miss critical academic deadlines, faculty waste time managing ad-hoc emails, and university leadership lacks actionable visibility into institutional activity.
+
+---
+
+## 🎯 Project Objectives
+
+1. **Unify Campus Communications**: Provide a centralized, categorized, and searchable announcement broadcast system.
+2. **Streamline Coursework**: Enable faculty to distribute problem sets, receive digital student solutions, and return constructive feedback.
+3. **Engage the Campus Community**: Facilitate discoverability, seat reservation, and roster tracking for university hackathons, guest lectures, and sports events.
+4. **Role-Based Workspaces**: Tailor specialized views and tools for **Students**, **Faculty Members**, and **University Administrators** with strict route guard policies.
+5. **Zero-Latency Prototyping**: Deliver an immediate, standalone demonstration using persistent browser `localStorage` and a clean service abstraction layer ready for backend integration.
+
+---
+
+## 👥 User Roles & Key Capabilities
+
+### 🎓 1. Student Portal
+* **Dashboard Overview**: Personalized greeting, GPA summary, enrolled course progress, pending assignment counters, and quick actions.
+* **Academic Information**: Detailed course catalog view displaying assigned faculty, lecture hours, classroom locations, credit weights, and expandable multi-week syllabi.
+* **Assignments & Submissions**: View assigned problem sets, deadlines, point totals, upload digital solution archives, and review faculty marks and notes.
+* **Campus Events**: Discover upcoming hackathons, career fairs, and workshops; 1-click registration with real-time capacity checks and duplicate registration prevention.
+* **Announcements**: Filter university bulletins by category (*Academic, Campus Life, Examination, Administration, Career*) and search by keyword.
+* **Student Profile**: Manage contact info, semester standing, avatar presets, and institutional identification.
+
+### 👨‍🏫 2. Faculty Portal
+* **Faculty Dashboard**: Active teaching metrics, total student count across classes, submission counts, and quick actions.
+* **Course Management**: Review assigned lectures, view class rosters, and inspect enrolled student profiles.
+* **Assignment Management**: Author new assignments with course selection, detailed prompts, submission deadlines, and maximum points. View submitted student papers and track evaluation progress.
+* **Announcement Publishing**: Create, edit, and delete course notices and departmental advisories.
+* **Faculty Profile**: Update office location, weekly student office hours, and academic credentials.
+
+### 🏛️ 3. Administrator Console
+* **Institutional Dashboard**: Executive overview of total enrolled students, faculty roster size, course offerings, and campus events.
+* **User Directory Management**: Complete searchable table of university users with role filtering (*Student, Faculty, Admin*). Add new demo users, edit details, or remove records.
+* **Event Hub Administration**: Publish new campus events with capacity limits, edit logistics, cancel events, and inspect the real-time registered student attendee roster.
+* **Campus-Wide Announcements**: Publish high-priority and pinned bulletins broadcast across all user portals.
+* **System Diagnostics & Audit Trail**: Live chronological audit log recording every login, registration, course action, and announcement update. One-click demonstration state reset.
+
+---
+
+## ⚡ Feature Matrix
+
+| Feature Module | Student | Faculty | Admin |
+| :--- | :---: | :---: | :---: |
+| **Role-Protected Dashboards** | ✅ | ✅ | ✅ |
+| **Global Quick Search** | ✅ | ✅ | ✅ |
+| **Notification Center** | ✅ | ✅ | ✅ |
+| **Browse Announcements** | ✅ | ✅ | ✅ |
+| **Publish/Delete Announcements** | ❌ | ✅ | ✅ |
+| **Browse Campus Events** | ✅ | ✅ | ✅ |
+| **Event Registration (1-Click)** | ✅ | ❌ | ❌ |
+| **Manage Events & View Attendee Rosters** | ❌ | ✅ | ✅ |
+| **View Enrolled Courses & Syllabi** | ✅ | ✅ | ✅ |
+| **Submit Assignments** | ✅ | ❌ | ❌ |
+| **Create & Grade Assignments** | ❌ | ✅ | ✅ |
+| **User Directory Management (CRUD)** | ❌ | ❌ | ✅ |
+| **System Audit Trail & Diagnostic Logs** | ❌ | ❌ | ✅ |
+| **Demonstration State Reset** | ❌ | ❌ | ✅ |
+
+---
+
+## 🛠 Technology Stack
+
+- **Core Framework**: React 18 (`react`, `react-dom`)
+- **Build Tool**: Vite 6 (Lightning-fast HMR and optimized production bundling)
+- **Routing**: React Router DOM v6 (`BrowserRouter`, nested layouts, `Navigate`, `ProtectedRoute`)
+- **Iconography**: Lucide React
+- **Styling**: Modern Vanilla CSS3 design system with custom CSS variables, responsive flexbox/grid architectures, and accessibility considerations.
+- **Data Persistence**: HTML5 `localStorage` coordinated through a decoupled `storageService.js` abstraction layer.
+
+---
+
+## 🏗 System Architecture
+
+The application is structured following clean architectural principles:
+
+```
+┌────────────────────────────────────────────────────────┐
+│                       UI Layer                         │
+│  (React Router DOM + Pages + Reusable Components)       │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│                     Context Layer                      │
+│      AuthContext.jsx          ToastContext.jsx         │
+└──────────────────────────┬─────────────────────────────┘
+                           │
+┌──────────────────────────▼─────────────────────────────┐
+│                     Service Layer                      │
+│                   storageService.js                    │
+│   (Encapsulates CRUD, activity logging & validation)   │
+└──────────────┬──────────────────────────┬──────────────┘
+               │                          │
+┌──────────────▼───────────┐   ┌──────────▼──────────────┐
+│    HTML5 LocalStorage    │   │  mockData.js (Fallback) │
+└──────────────────────────┘   └─────────────────────────┘
+```
+
+> **Clean Backend Integration**: Because all state mutations pass through `storageService.js`, swapping `localStorage` for a RESTful API or GraphQL backend (e.g. Express, Django, FastAPI) simply requires changing the methods in `src/services/storageService.js` without rewriting any UI components.
+
+---
+
+## 📁 Folder Structure
 
 ```
 campus-connect-portal/
-├── client/                        # React + Vite frontend
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── AuthLayout.jsx     # Two-column auth page layout
-│   │   │   ├── LoginForm.jsx      # Login form with state-driven validation
-│   │   │   ├── RegisterForm.jsx   # Registration form with inline errors
-│   │   │   ├── Dashboard.jsx      # Authenticated dashboard view
-│   │   │   └── Message.jsx        # Reusable success/error message component
-│   │   ├── App.jsx                # Root component — all top-level state
-│   │   ├── App.css                # Component styles
-│   │   ├── index.css              # Global design tokens and resets
-│   │   └── main.jsx               # React entry point
-│   ├── index.html
-│   └── package.json
-├── server/                        # Express + MongoDB backend (future use)
-│   └── package.json               # Has bcryptjs, JWT, mongoose ready
-├── docs/
-│   └── EXPERIMENT_4.md            # Detailed experiment documentation
+├── public/
+│   └── vite.svg
+├── src/
+│   ├── assets/
+│   ├── components/
+│   │   ├── ConfirmDialog.jsx      # Reusable confirmation modal for deletes
+│   │   ├── DashboardLayout.jsx    # Persistent layout with Sidebar and Navbar
+│   │   ├── Modal.jsx              # Reusable accessible dialog overlay
+│   │   ├── Navbar.jsx             # Top bar with global search, notifications, & demo switcher
+│   │   ├── ProtectedRoute.jsx     # Role-based route authorization guard
+│   │   ├── Sidebar.jsx            # Role-specific navigation drawer
+│   │   ├── StatCard.jsx           # Metric visualization card
+│   │   └── Toast.jsx              # Toast container & animated notifications
+│   ├── context/
+│   │   ├── AuthContext.jsx        # Session state, login/register, profile updates
+│   │   └── ToastContext.jsx       # Global notification dispatcher
+│   ├── data/
+│   │   └── mockData.js            # Initial institutional seed dataset
+│   ├── pages/
+│   │   ├── AdminDashboard.jsx     # Administrator console
+│   │   ├── AdminSystem.jsx        # System diagnostics and full audit trail
+│   │   ├── Announcements.jsx      # University announcements feed & editor
+│   │   ├── Assignments.jsx        # Coursework submission & grading portal
+│   │   ├── Courses.jsx            # Course catalog, syllabi, & class rosters
+│   │   ├── Events.jsx             # Campus event hub & registration manager
+│   │   ├── FacultyDashboard.jsx   # Faculty workspace
+│   │   ├── Login.jsx              # Institutional login with demo account autofill
+│   │   ├── Profile.jsx            # User profile editor and digital ID card
+│   │   ├── Register.jsx           # Account creation interface
+│   │   ├── StudentDashboard.jsx   # Student overview
+│   │   └── UserManagement.jsx     # Administrator user directory (CRUD)
+│   ├── services/
+│   │   └── storageService.js      # Persistent storage & business logic layer
+│   ├── styles/
+│   │   └── global.css             # Comprehensive design system
+│   ├── App.jsx                    # Route hierarchy & role guards
+│   └── main.jsx                   # Application entry point
+├── index.html
+├── package.json
+├── vite.config.js
 └── README.md
 ```
 
 ---
 
-## Running the Project
+## 🚀 Installation & Setup
 
 ### Prerequisites
-- Node.js 18+ installed
-- npm or yarn
+- **Node.js**: v18.0.0 or higher
+- **npm**: v9.0.0 or higher
 
-### Start the Frontend
+### Steps
 
-```bash
-cd client
-npm install
-npm run dev
-```
+1. **Clone or Navigate to the Workspace**:
+   ```bash
+   cd campus-connect-portal
+   ```
 
-The application will be available at: **http://localhost:5173**
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-### Build for Production
+3. **Start the Development Server**:
+   ```bash
+   npm run dev
+   ```
+   Open your browser and navigate to `http://localhost:5173`.
 
-```bash
-cd client
-npm run build
-```
-Listen carefully these are the four files this analyse and understand what actually happened is that my lecturers like that to do a mini project so I did completely with anti gravity now what I have to do if that to create report according to what the four PDFs  is saying to you ask me questions what you actually want I will upload to you whether they are screenshots are links I will give to you we have to give me create a report according to the PDF format what are the details my usn  and my name everything ask what you want i want to get 20/20 marks annd  still first give me clarity what to upload in assignemt
----
+4. **Build for Production**:
+   ```bash
+   npm run build
+   ```
 
-## Prototype Authentication Note
-
-> ⚠️ **Important:** This application uses `localStorage`-based prototype authentication **for laboratory demonstration only**.
-
-In this prototype:
-- The registered user's data (including password) is stored in browser `localStorage`
-- Credentials are compared directly in JavaScript state
-- There is **no password hashing** or server-side validation
-
-**In a real production application:**
-- Passwords MUST be hashed using `bcrypt` on the server
-- Authentication MUST use JWT tokens or server-side sessions
-- All communication MUST use HTTPS
-- NEVER store plain-text passwords on the client
-
-The `server/` directory already has `bcryptjs`, `jsonwebtoken`, `express`, and `mongoose` installed — ready for proper backend authentication in future experiments (Experiment 6 & 7).
+5. **Preview Production Build**:
+   ```bash
+   npm run preview
+   ```
 
 ---
 
-## Version Control
+## 🔑 Demonstration Credentials
 
-### Commit History
+For testing and evaluation, pre-configured accounts are ready to use. You can also click the **Quick Demo Account** buttons on the Login page or in the top navigation bar to switch accounts in 1 click!
 
-This project was developed with meaningful commits aligned to the lab manual requirements:
+| Role | Email | Password | Details |
+| :--- | :--- | :--- | :--- |
+| **Student** | `student@campus.com` | `student123` | Alex Johnson (CS-2023-049, 5th Sem) |
+| **Faculty** | `faculty@campus.com` | `faculty123` | Dr. Robert Vance (Associate Professor & Chair) |
+| **Administrator** | `admin@campus.com` | `admin123` | Dean Eleanor Wright (Dean of Digital Infrastructure) |
 
-| # | Commit Message | Description |
-|---|---------------|-------------|
-| 1 | `Initial commit: Setup project folder structure for client and server` | Initial project scaffold |
-| 2 | `feat: replace Vite starter with Campus Connect structure` | Removed Vite demo, added components |
-| 3 | `feat: add login and registration state handling` | Core state management in App.jsx |
-| 4 | `feat: add authentication validation and prototype persistence` | Validation + localStorage |
-| 5 | `feat: add Campus Connect dashboard and logout flow` | Dashboard + logout state flow |
-| 6 | `style: create responsive Campus Connect interface` | CSS design system + responsiveness |
-| 7 | `docs: document Experiment 4 implementation and state flow` | README + EXPERIMENT_4.md |
+*You can also register brand-new demonstration accounts via the `/register` page.*
 
 ---
 
-## GitHub Repository
+## 💾 Data Persistence & Prototype Architecture
 
-🔗 **https://github.com/PatilAbhishek7/campus-connect-portal**
-
----
-
-## Lab Manual Reference
-
-**Course:** CS3301 Full Stack Development  
-**Experiment:** 4  
-**Title:** Building a Small Interactive Web Application with State Handling and Version Control  
-**Aim:** To develop a small interactive web application that manages its own state, while practising version control using Git and GitHub.
+> [!IMPORTANT]
+> **Prototype Demonstration Notice**:
+> This application is an interactive prototype designed for evaluation. It utilizes **browser `localStorage`** for client-side persistence and demonstration authentication rather than a production-grade identity provider or remote database.
+>
+> - Any announcement you post, event you register for, user you create, or profile change you save will persist across browser refreshes and page reloads.
+> - If you ever want to revert back to the pristine default mock state, log in as **Admin** and click **"Reset Demo State"** on the dashboard or in the System Activity tab.
 
 ---
 
-## Experiment 6
+## ⚠️ Current Limitations
 
-**Developing and Consuming Backend Services Using RESTful API Principles (Node.js and Express)**
-
-**Aim:** To develop and consume backend services that follow RESTful API principles, supporting basic CRUD operations with middleware handling using Node.js and Express.
-
-### Technology
-- **Node.js** — JavaScript runtime
-- **Express.js** — Web framework
-- **CORS** — Cross-origin support
-- **Nodemon** — Dev auto-restart
-
-### API Architecture
-
-```
-Postman / Frontend → HTTP Request → Express Server
-  → cors() → express.json() → logger()
-  → Routes → Controller → In-Memory Data
-  → JSON Response
-```
-
-### REST Resource: `/api/students`
-
-| Operation | HTTP Method | Endpoint | Status Code |
-|-----------|-------------|----------|-------------|
-| Create | `POST` | `/api/students` | 201 |
-| Read All | `GET` | `/api/students` | 200 |
-| Read One | `GET` | `/api/students/:id` | 200 |
-| Update | `PUT` | `/api/students/:id` | 200 |
-| Delete | `DELETE` | `/api/students/:id` | 200 |
-
-### Student Schema
-
-```json
-{
-  "id": "STU001",
-  "name": "Abhishek Patil",
-  "email": "abhishek@campusconnect.edu",
-  "department": "Computer Science",
-  "year": 2,
-  "skills": ["JavaScript", "React", "Node.js"]
-}
-```
-
-### Middleware Stack
-
-| Middleware | File | Purpose |
-|-----------|------|---------|
-| `cors()` | built-in | Allow cross-origin requests |
-| `express.json()` | built-in | Parse JSON request bodies |
-| `logger` | `middleware/logger.js` | Log all requests with timestamp |
-| `notFound` | `middleware/notFound.js` | 404 for unmatched routes |
-| `errorHandler` | `middleware/errorHandler.js` | Central JSON error responses |
-
-### HTTP Status Codes
-
-| Code | Meaning |
-|------|---------|
-| 200 | OK — GET / PUT / DELETE success |
-| 201 | Created — POST success |
-| 400 | Bad Request — validation error |
-| 404 | Not Found — student or route missing |
-| 500 | Internal Server Error |
-
-### Running the Backend
-
-```bash
-cd server
-npm install
-npm run dev
-# API running at http://localhost:5000
-```
-
-### Postman Testing
-
-Import: `docs/Campus-Connect-Experiment-6.postman_collection.json`
-
-Base URL: `http://localhost:5000`
-
-### Server File Structure
-
-```
-server/
-├── server.js
-├── routes/studentRoutes.js
-├── controllers/studentController.js
-├── middleware/
-│   ├── logger.js
-│   ├── errorHandler.js
-│   └── notFound.js
-└── data/students.js
-```
-
-### Documentation
-
-- Full API docs: [`docs/EXPERIMENT_6.md`](docs/EXPERIMENT_6.md)
-- Postman collection: [`docs/Campus-Connect-Experiment-6.postman_collection.json`](docs/Campus-Connect-Experiment-6.postman_collection.json)
+- **Authentication Security**: Passwords are saved in plain text in client-side storage for demonstration purposes only. Production deployments require bcrypt password hashing, JWT/OAuth2 tokens, and secure HTTP-only cookies.
+- **File Uploads**: Assignment submissions currently register simulated file metadata (`.pdf`, `.zip`) rather than streaming binary blobs to an Amazon S3 or Google Cloud Storage bucket.
+- **Single-Client Isolation**: State is maintained per browser instance. Changes made in one browser window will not reflect in another user's separate browser unless shared via a synchronized backend.
 
 ---
 
-## GitHub Repository
+## 🔮 Future Roadmap
 
-🔗 **https://github.com/PatilAbhishek7/campus-connect-portal**
+1. **Full-Stack REST Backend**: Migrate `storageService.js` to an Express/PostgreSQL or NestJS backend with Prisma ORM.
+2. **Real-Time WebSockets**: Instant push notifications for deadline alerts, grade publications, and chat messaging.
+3. **Automated Autograding**: Sandbox execution container for student code submissions with automated unit tests.
+4. **Attendance Tracking**: QR-code based event and classroom check-in system.
+5. **Fee Payment & Bursar Module**: Integration with Stripe for tuition payments, library fines, and housing fee settlements.
+
+---
+
+*Developed for Academic Operations & Modern University Campus Management.*
